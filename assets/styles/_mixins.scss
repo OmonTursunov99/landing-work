@@ -1,0 +1,21 @@
+@mixin svgColor($clr) {
+  svg {
+    path {
+      fill: $clr;
+    }
+
+    g {
+      fill: $clr;
+    }
+
+    circle {
+      stroke: $clr;
+    }
+  }
+}
+
+@mixin btnDefault {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}

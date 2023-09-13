@@ -1,0 +1,18 @@
+{
+  "app": "Приложение",
+  "private_individuals": "Частным лицам",
+  "legal_entities": "Юридическим лицам",
+  "select_location": "Выберите локации",
+  "rates": "Тарифы",
+  "internet_packages": "Интернет-пакеты",
+  "services": "Услуги",
+  "roaming": "Роуминг",
+  "beeline_club": "Beeline-club",
+  "press_center": "Пресс-центр",
+  "help": "Помощь",
+  "more": "Еще",
+  "search": "Поиск",
+  "personal_account": "Личный кабинет",
+  "ru": "РУС",
+  "uz": "UZB"
+}
