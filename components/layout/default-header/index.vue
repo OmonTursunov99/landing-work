@@ -24,7 +24,6 @@ export default {
         { value: "uz", label: this.$t("uz") },
       ],
       lang: "UZB",
-
     };
   },
 }
@@ -63,7 +62,7 @@ export default {
             </ul>
           </nav>
           <common-form-dropdown :label="$t('more')"/>
-          <common-form-select class="mr-4xl ml-auto" v-model="lang" :fields="mapLang"/>
+          <common-lang-selector class="mr-4xl ml-auto"  />
           <div class="flex-side gap-md">
             <common-custom-button icon icon-left :label="$t('search')" fill="outline">
               <template #icon>
@@ -92,7 +91,7 @@ export default {
       border-bottom: 1px solid rgba(var(--clr-black-rgb), 0.1);
       padding-right: 46px;
       .default-header-content-head-action {
-        padding: 6px 0;
+        padding: 6px 0 5px;
         .default-header-content-head-action-btn {
           color: var(--clr-black);
           @include btnDefault;
@@ -130,6 +129,10 @@ export default {
 
               &:hover {
                 color: var(--clr-primary);
+              }
+
+              &:active {
+                color: rgba(var(--clr-black-rgb), 0.2);
               }
             }
           }

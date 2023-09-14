@@ -18,6 +18,10 @@
     gap: 8px;
   }
 
+  &.gap-xs {
+    gap: 12px;
+  }
+
   &.gap-md {
     gap: 16px;
   }
@@ -78,7 +82,27 @@
   line-height: 16px;
 }
 
+.heading-5 {
+  //styleName: desktop/heading_h5;
+  font-family: var(--fort-druk-wide);
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 24px;
+}
+
+.heading-4 {
+  //styleName: desktop/heading_h4;
+  font-family: var(--fort-druk-wide);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 28px;
+}
+
 .text-uppercase {
   text-transform: uppercase;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px 0 rgba(224, 224, 224, 1);
 }
 

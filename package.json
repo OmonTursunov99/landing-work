@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
-    "pinia": "^2.1.4"
+    "lodash": "^4.17.21",
+    "pinia": "^2.1.4",
+    "swiper": "^10.2.0"
   }
 }

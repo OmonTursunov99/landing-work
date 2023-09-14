@@ -1,5 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import svgLoader from 'vite-svg-loader'
+import svgLoader from 'vite-svg-loader';
 
 import { defineNuxtConfig } from "nuxt/config";
 import { InputConfig } from "c12";
@@ -10,11 +10,19 @@ const inputConfig: InputConfig = {
       "charset": 'utf-8',
       "viewport": 'width=device-width, initial-scale=1',
       "title": "Beeline | 1.0.0",
+      link: [
+        { rel: 'icon', href: '/svg/logo.svg' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap'
+        },
+      ]
     },
     pageTransition: true
   },
   css: [
     '@/assets/styles/global.scss',
+    '@/assets/styles/fonts.scss',
   ],
   modules: [
     "@pinia/nuxt",
@@ -24,7 +32,7 @@ const inputConfig: InputConfig = {
   pinia: {
     autoImports: [
       'defineStore',
-      ['defineStore', 'definePiniaStore']
+      [ 'defineStore', 'definePiniaStore' ]
     ]
   },
   i18n: {

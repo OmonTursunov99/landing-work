@@ -79,12 +79,6 @@ export default {
         [`custom-button-fill-${ this.$props.fill }`]: true,
       }
     },
-    iconSrcAttr() {
-      if ( this.$props.loading ) {
-        return "/svg/loading.svg";
-      }
-      return this.$props.iconPath;
-    },
     attrs() {
       return {
         class: this.classAttr,
@@ -136,14 +130,19 @@ export default {
     height: 34px;
   }
 
+  &.custom-button-icon {
+    svg {
+      & > * {
+        transition: 0.25s ease-in-out;
+      }
+    }
+  }
+
   &.custom-button-loading {
     cursor: wait;
 
     svg {
       animation: spinnerAnimation infinite 1s linear;
-      & > * {
-        transition: 0.25s ease-in-out;
-      }
     }
 
     @keyframes spinnerAnimation {
