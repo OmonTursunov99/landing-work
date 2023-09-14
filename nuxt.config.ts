@@ -47,7 +47,7 @@ const inputConfig: InputConfig = {
     ]
   },
   devServer: {
-    port: import.meta.env.VITE_APP_PORT || 3600,
+    port: import.meta.env.VITE_APP_PORT || 3000,
   },
   devtools: { enabled: true }
 }
