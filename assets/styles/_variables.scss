@@ -1,7 +1,6 @@
 :root {
   //--nuxt-devtools-safe-area-top: 40px;
 
-
   --clr-primary: #FFC800;
   --clr-primary-rgb: 255, 200, 0;
   --clr-black: #000000;
@@ -14,9 +13,13 @@
   --clr-blue-rgb: 105, 180, 246;
   --clr-green: #5FBB46;
   --clr-green-rgb: 95, 187, 70;
+  --clr-info: #1981E2;
 
-  --clr-gray-3: #F6F7F8;
+  --clr-blue-1: #F1F5F9;
   --clr-gray-1: #D4DFE8;
+  --clr-gray-2: #E8ECEF;
+  --clr-gray-3: #F6F7F8;
+  --clt-shadow: #e0e0e0;
 
   // FIX next-line
   --clr-arrow-icon: #DAE0E2;
@@ -25,4 +28,9 @@
   --fort-druk-wide: 'druk-wide', sans-serif;
 }
 
-
+html[theme='dark'] {
+  --clr-black: #ffffff;
+  --clr-black-rgb: 255, 255, 255;
+  --clr-white: #000000;
+  --clr-white-rgb: 0, 0, 0;
+}

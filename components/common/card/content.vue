@@ -40,7 +40,7 @@ export default {
 
 <template>
   <component :is="tag" class="content-card">
-    <img v-if="!!imagePath" class="content-card-image" :src="imagePath" alt="" />
+    <img v-if="!!imagePath" class="content-card-image" :src="imagePath" alt=""/>
     <p v-if="!!heading" class="content-card-heading heading-5">{{ heading }}</p>
     <p v-if="!!description" class="content-card-description text-sm">{{ description }}</p>
     <div v-if="!!loopText" class="content-card-bottom flex-side gap-xs">
@@ -93,7 +93,8 @@ export default {
   }
 
   &:hover {
-    box-shadow: 0 8px 12px 0 rgba(224, 224, 224, 1);
+    box-shadow: 0 8px 12px 0 var(--clt-shadow);
+
     .content-card-image {
       transform: scale(1.2);
     }

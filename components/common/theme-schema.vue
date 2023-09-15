@@ -16,6 +16,15 @@ export default {
   methods: {
     handler() {
       this.isDark = !this.isDark;
+      const html = document.querySelector('html');
+      const theme = html.getAttribute('theme');
+
+      if ( !theme ) {
+        html.setAttribute('theme', 'dark');
+        return;
+      }
+      const setTheme = theme === 'light' ? 'dark' : 'light';
+      html.setAttribute('theme', setTheme);
     }
   }
 }

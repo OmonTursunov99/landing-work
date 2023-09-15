@@ -4,6 +4,7 @@
   "legal_entities": "Юридическим лицам",
   "select_location": "Выберите локации",
   "rates": "Тарифы",
+  "tariff": "Тарифы",
   "internet_packages": "Интернет-пакеты",
   "services": "Услуги",
   "roaming": "Роуминг",
@@ -15,5 +16,18 @@
   "personal_account": "Личный кабинет",
   "ru": "РУС",
   "uz": "UZB",
-  "en": "ENG"
+  "en": "ENG",
+  "roaming_packages": "Роуминг-пакеты",
+  "juma_offers": "Жума Таклифлари",
+  "popular": "Популярные",
+  "for_communication": "Для общения",
+  "for_internet": "Для интернета",
+  "for_traveling": "Для путешествий",
+  "all_in_one": "Все в одном тарифе",
+  "more_details": "Подробнее",
+  "for_days": "на {day} дней",
+  "to_connect": "Подключить",
+  "sum": "сум",
+  "all": "Все",
+  "sum/month": "сум/мес."
 }

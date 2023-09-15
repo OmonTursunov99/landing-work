@@ -58,6 +58,10 @@ export default {
       validator(fill) {
         return mapFill.includes(fill);
       },
+    },
+    center: {
+      type: Boolean,
+      default: false,
     }
   },
   emits: [ 'handler' ],
@@ -71,6 +75,7 @@ export default {
       return {
         'custom-button': true,
         'custom-button-disabled': this.$props.disabled,
+        'custom-button-center': this.$props.center,
         'custom-button-loading': this.$props.loading,
         'custom-button-icon': !!this.$props.icon,
         'custom-button-icon-left': this.$props.iconLeft && !!this.$props.icon,
@@ -111,6 +116,11 @@ export default {
   align-items: center;
   gap: 8px;
   transition: var(--transition);
+
+  &.custom-button-center {
+    justify-content: center;
+    width: 100%;
+  }
 
   &.custom-button-size-large {
     font-size: 16px;
@@ -250,6 +260,57 @@ export default {
 
         &.custom-button-icon {
           @include svgColor(rgba(var(--clr-black-rgb), 0.3));
+        }
+      }
+    }
+  }
+
+  &.custom-button-fill-secondary {
+    background-color: var(--clr-black);
+    color: var(--clr-white);
+    border: none;
+
+    &.custom-button-icon {
+      @include svgColor(var(--clr-white));
+    }
+
+    &.custom-button-loading {
+      &:disabled {
+        background-color: rgba(var(--clr-black-rgb), 0.5);
+        color: var(--clr-white);
+        @include svgColor(var(--clr-white));
+      }
+    }
+
+    &:hover {
+      &:not(&:disabled) {
+        background-color: rgba(var(--clr-black-rgb), 0.8);
+        color: var(--clr-white);
+
+        &.custom-button-icon {
+          @include svgColor(var(--clr-white));
+        }
+      }
+    }
+
+    &:active {
+      &:not(&:disabled) {
+        background-color: rgba(var(--clr-black-rgb), 0.5);
+        color: var(--clr-white);
+
+        &.custom-button-icon {
+          @include svgColor(var(--clr-white));
+        }
+      }
+    }
+
+    &:disabled {
+      &:not(&.custom-button-loading) {
+        background-color: rgba(var(--clr-black-rgb), 0.1);
+        color: rgba(var(--clr-black-rgb), 0.5);
+
+        &.custom-button-icon {
+          @include svgColor(rgba(var(--clr-black-rgb), 0.5));
         }
       }
     }

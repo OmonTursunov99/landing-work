@@ -9,10 +9,15 @@
 ul {
   li {
     list-style-type: none;
-    a {
-      text-decoration: none;
-    }
   }
+}
+
+body {
+  background-color: var(--clr-white);
+}
+
+a {
+  text-decoration: none;
 }
 
 .v-enter-active,

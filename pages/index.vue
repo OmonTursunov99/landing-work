@@ -1,17 +1,15 @@
 <script>
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Navigation, Autoplay, Pagination, FreeMode } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/free-mode';
 import svgArrowLeft from "@/public/svg/arrow-left.svg?component";
-
-// const mapInternetPackage = [
-//   {key: '', label: 'Интернет-пакеты'},
-//   {key: 'rouming', label: 'Роуминг-пакеты'},
-//   {key: 'juma', label: 'Жума Таклифлари'},
-// ]
+import svgArrowRight from "@/public/svg/arrow-right.svg?component"
+import { useInternetPackagesStore } from "~/store/intenet-packages";
+import { useTariffsStore } from "~/store/tariffs";
+import gsap from 'gsap'
 
 export default {
   name: "page-home",
@@ -19,12 +17,15 @@ export default {
     Swiper,
     SwiperSlide,
     svgArrowLeft,
+    svgArrowRight,
   },
   data() {
     return {
+      internetPackagesStore: useInternetPackagesStore(),
+      tariffsStore: useTariffsStore(),
       swiperInfoOptions: {
         autoplay: { delay: 1000, disableOnInteraction: false, pauseOnMouseEnter: true },
-        slidesPerView: 6,
+        slidesPerView: 7,
         spaceBetween: 16,
         loop: true,
         freeMode: true,
@@ -38,12 +39,58 @@ export default {
         autoplay: { delay: 10000, disableOnInteraction: false },
         pagination: { clickable: true },
       },
-      catalogValue: 'tariff',
+      mapInternetPackage: [
+        { key: 'internet_packages', label: this.$t("internet_packages") },
+        { key: 'roaming_packages', label: this.$t("roaming_packages") },
+        { key: 'juma_offers', label: this.$t("juma_offers") },
+      ],
+      mapTariff: [
+        { key: 'popular', label: this.$t("popular") },
+        { key: 'for_communication', label: this.$t("for_communication") },
+        { key: 'for_internet', label: this.$t("for_internet") },
+        { key: 'for_traveling', label: this.$t("for_traveling") },
+        { key: 'all_in-one', label: this.$t("all_in_one") },
+      ],
+      catalogValue: 'tariff', // internet_packages | tariff
+      internetPackageValue: 'internet_packages',
+      tariffValue: 'popular',
     };
   },
   methods: {
     changeCatalogValue(key) {
       this.catalogValue = key;
+    },
+    changeInternetPackageValue(key) {
+      this.internetPackageValue = key;
+    },
+    changeTariffValue(key) {
+      this.tariffValue = key;
+    },
+    onBeforeEnter(el) {
+      el.style.opacity = 0
+      el.style.height = 0
+    },
+    onEnter(el, done) {
+      gsap.to(el, {
+        opacity: 1,
+        height: '1.6em',
+        delay: el.dataset.index * 0.15,
+        onComplete: done
+      })
+    },
+
+    onLeave(el, done) {
+      gsap.to(el, {
+        opacity: 0,
+        height: 0,
+        delay: el.dataset.index * 0.15,
+        onComplete: done
+      })
+    },
+  },
+  computed: {
+    catalogButtonLabel() {
+      return `${this.$t("all")} ${this.$t(this.catalogValue).toString().toLowerCase()}`;
     }
   }
 }
@@ -134,24 +181,74 @@ export default {
     <div class="page-home-catalog">
       <div class="page-home-catalog-head">
         <div class="container">
-          <div class="flex-side gap-md">
-            <button
-              class="page-home-catalog-head-action heading-4"
-              type="button"
-              :class="{'is-active': catalogValue === 'tariff'}"
-              @click="changeCatalogValue('tariff')"
-            >
-              Тарифы
-            </button>
-            <span class="heading-4">и</span>
-            <button
-              class="page-home-catalog-head-action heading-4"
-              type="button"
-              :class="{'is-active': catalogValue === 'internet-packages'}"
-              @click="changeCatalogValue('internet-packages')"
-            >
-              интернет-пакеты
-            </button>
+          <div class="flex-side column gap-2xl">
+            <div class="flex-side gap-md">
+              <button
+                class="page-home-catalog-head-action heading-4"
+                type="button"
+                :class="{'is-active': catalogValue === 'tariff'}"
+                @click="changeCatalogValue('tariff')"
+              >
+                Тарифы
+              </button>
+              <span class="heading-4">и</span>
+              <button
+                class="page-home-catalog-head-action heading-4"
+                type="button"
+                :class="{'is-active': catalogValue === 'internet_packages'}"
+                @click="changeCatalogValue('internet_packages')"
+              >
+                интернет-пакеты
+              </button>
+            </div>
+            <div class="flex-side gap-md">
+              <template v-if="catalogValue === 'tariff'">
+                <common-chips
+                  v-for="chips in mapTariff"
+                  :key="chips.key"
+                  :label="chips.label"
+                  :active="chips.key === tariffValue"
+                  @click="changeTariffValue(chips.key)"
+                />
+              </template>
+              <template v-if="catalogValue === 'internet_packages'">
+                <common-chips
+                  v-for="chips in mapInternetPackage"
+                  :key="chips.key"
+                  :label="chips.label"
+                  :active="chips.key === internetPackageValue"
+                  @click="changeInternetPackageValue(chips.key)"
+                />
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="page-home-catalog-items flex-side column gap-3xl">
+          <TransitionGroup>
+            <div v-if="catalogValue === 'tariff'" class="page-home-catalog-items-grid">
+              <common-card-tariff v-for="item in tariffsStore.$state.populars" :key="item.id" :data="item"/>
+            </div>
+            <div v-if="catalogValue === 'internet_packages'" class="page-home-catalog-items-grid">
+              <common-card-package v-for="item in internetPackagesStore.$state.internetPackages" :key="item.id" :data="item"/>
+            </div>
+          </TransitionGroup>
+          <div class="flex-side justify-between w-full">
+            <common-custom-button
+              :label="catalogButtonLabel"
+              size="large"
+              fill="outline"
+            />
+            <common-pagination/>
+            <div class="flex-side gap-xs">
+              <button class="page-home-catalog-items-action" type="button">
+                <svg-arrow-left/>
+              </button>
+              <button class="page-home-catalog-items-action" type="button">
+                <svg-arrow-right/>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -265,6 +362,8 @@ export default {
   }
 
   .page-home-catalog {
+    background-color: var(--clr-gray-2);
+
     .page-home-catalog-head {
       background-color: var(--clr-gray-1);
       padding: 26px 0 24px;
@@ -280,6 +379,53 @@ export default {
           background-color: var(--clr-black);
           color: var(--clr-white);
           text-decoration: none;
+        }
+      }
+    }
+
+    .page-home-catalog-items {
+      padding: 32px 0;
+
+      .page-home-catalog-items-grid {
+        width: 100%;
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .page-home-catalog-items-action {
+        @include btnDefault;
+        min-width: 56px;
+        height: 56px;
+        border: 1px solid var(--clr-black);
+        transition: var(--transition);
+
+        svg {
+          path {
+            transition: var(--transition);
+            stroke: var(--clr-black);
+          }
+        }
+
+        &:hover {
+          background-color: var(--clr-black);
+
+          svg {
+            path {
+              stroke: var(--clr-white);
+            }
+          }
+        }
+
+        &:active {
+          background-color: transparent;
+          border-color: rgba(var(--clr-black-rgb), 0.5);
+
+          svg {
+            path {
+              stroke: rgba(var(--clr-black-rgb), 0.5);
+            }
+          }
         }
       }
     }

@@ -45,7 +45,7 @@ export default {
           </div>
           <div class="flex-side gap-md ml-auto">
             <div class="flex-side gap-2xs">
-              <svgMapSubtract/>
+              <svg-map-subtract/>
               <p class="text-xs">{{ $t("select_location") }}</p>
             </div>
             <common-theme-schema/>
