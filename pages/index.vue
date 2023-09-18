@@ -9,11 +9,12 @@ import svgArrowLeft from "@/public/svg/arrow-left.svg?component";
 import svgArrowRight from "@/public/svg/arrow-right.svg?component"
 import { useInternetPackagesStore } from "~/store/intenet-packages";
 import { useTariffsStore } from "~/store/tariffs";
-import gsap from 'gsap';
 import Flicking from "@egjs/vue3-flicking";
 import { AutoPlay } from "@egjs/flicking-plugins";
+import { vMaska } from "maska";
+import { useServicesStore } from "@/store/services";
 
-const plugins = [ new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: true }) ];
+const pluginsSlideContent = [ new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: true }) ];
 
 export default {
   name: "page-home",
@@ -28,6 +29,7 @@ export default {
     return {
       internetPackagesStore: useInternetPackagesStore(),
       tariffsStore: useTariffsStore(),
+      servicesStore: useServicesStore(),
       swiperInfoOptions: {
         autoplay: { delay: 1000, disableOnInteraction: false, pauseOnMouseEnter: true },
         slidesPerView: 7,
@@ -38,9 +40,8 @@ export default {
       },
       swiperIntroOptions: {
         class: [ 'page-home-intro-swiper' ],
-        navigation: true,
         loop: true,
-        modules: [ Navigation, Autoplay, Pagination ],
+        modules: [ Navigation, Autoplay ],
         autoplay: { delay: 10000, disableOnInteraction: false },
         pagination: { clickable: true },
       },
@@ -168,7 +169,26 @@ export default {
           }
         },
       ],
-      plugins,
+      pluginsSlideContent,
+      optionsSlideContent: {
+        circular: true,
+        renderOnlyVisible: true
+      },
+      mapServices: [
+        { key: "popular_service", label: this.$t("popular_service") },
+        { key: "digital", label: this.$t("digital") },
+        { key: "popular_service", label: this.$t("popular_service") },
+        { key: "digital", label: this.$t("digital") },
+        { key: "popular_service", label: this.$t("popular_service") },
+        { key: "digital", label: this.$t("digital") },
+        { key: "popular_service", label: this.$t("popular_service") },
+        { key: "digital", label: this.$t("digital") },
+        { key: "popular_service", label: this.$t("popular_service") },
+        { key: "digital", label: this.$t("digital") },
+        { key: "popular_service", label: this.$t("popular_service") },
+        { key: "digital", label: this.$t("digital") },
+      ],
+      servicesValue: 'popular_service'
     };
   },
   methods: {
@@ -180,27 +200,6 @@ export default {
     },
     changeTariffValue(key) {
       this.tariffValue = key;
-    },
-    onBeforeEnter(el) {
-      el.style.opacity = 0
-      el.style.height = 0
-    },
-    onEnter(el, done) {
-      gsap.to(el, {
-        opacity: 1,
-        height: '1.6em',
-        delay: el.dataset.index * 0.15,
-        onComplete: done
-      })
-    },
-
-    onLeave(el, done) {
-      gsap.to(el, {
-        opacity: 0,
-        height: 0,
-        delay: el.dataset.index * 0.15,
-        onComplete: done
-      })
     },
   },
   computed: {
@@ -229,17 +228,11 @@ export default {
       </swiper>
     </div>
     <div class="page-home-info">
-      <Flicking class="page-home-info-slider" :options="{ circular: true, renderOnlyVisible: true }" :plugins="plugins">
-        <div
-          v-for="(content, index) in mapContent"
-          :key="index"
-          style="width: 200px"
-        >
-          <common-card-content
-            v-bind="content"
-          />
+      <flicking class="page-home-info-slider" :options="optionsSlideContent" :plugins="pluginsSlideContent">
+        <div v-for="(content, index) in mapContent" :key="index" style="width: 200px">
+          <common-card-content v-bind="content" transparent-background/>
         </div>
-      </Flicking>
+      </flicking>
     </div>
     <div class="page-home-catalog">
       <div class="page-home-catalog-head">
@@ -318,27 +311,105 @@ export default {
       </div>
     </div>
     <div class="page-home-text-slide flex-side column gap-md">
-      <div class="page-home-text-slide-wrapper flex-side gap-2xl">
+      <div class="page-home-text-slide-wrapper no-scroll flex-side gap-2xl">
         <template v-for="text in mapTextSlides" :key="text">
           <p class="heading-1">{{ text }}</p>
-          <div class="page-home-text-slide-dod"/>
+          <div class="page-home-text-slide-wrapper-dod"/>
         </template>
       </div>
-      <div class="page-home-text-slide-wrapper flex-side gap-2xl">
+      <div class="page-home-text-slide-wrapper no-scroll flex-side gap-2xl">
         <template v-for="text in mapTextSlides" :key="text">
           <p class="heading-1">{{ text }}</p>
-          <div class="page-home-text-slide-dod"/>
+          <div class="page-home-text-slide-wrapper-dod"/>
         </template>
+      </div>
+    </div>
+    <div class="container">
+      <div class="grid column-2 gap-xl">
+        <div class="page-home-create-tariff flex-side column">
+          <strong
+            class="page-home-create-tariff-heading heading-4">{{ $t("do_not_know_which_tariff_to_choose") }}</strong>
+          <p
+            class="page-home-create-tariff-title heading-6">{{ $t("we_will_ask_you_only_questions", { count: 4 }) }}</p>
+          <em class="page-home-create-tariff-description text-sm">{{ $t("create_tariff_description") }}</em>
+          <common-custom-button :label="$t('choose_a_suitable_tariff')" fill="secondary"/>
+          <img class="page-home-create-tariff-image" src="/svg/create-tariff.svg" alt=""/>
+        </div>
+        <form class="page-home-up-balance-online flex-side column gap-md">
+          <img class="page-home-up-balance-online-image" src="/svg/online-pay.svg" alt=""/>
+          <strong class="page-home-up-balance-online-heading heading-5">{{ $t("up_balance_online") }}</strong>
+          <div class="page-home-up-balance-online-control">
+            <label class="page-home-up-balance-online-control-label text-base">+998</label>
+            <input
+              class="page-home-up-balance-online-control-input text-base"
+              type="text"
+              :placeholder="$t('phone_number')"
+              v-maska
+              data-maska="#-#"
+              required
+            />
+          </div>
+          <div class="page-home-up-balance-online-control">
+            <input
+              class="page-home-up-balance-online-control-input is-right text-base"
+              :placeholder="$t('summa')"
+              required
+              type="text"
+            />
+            <label class="page-home-up-balance-online-control-label is-right text-base">{{ $t("sum") }}</label>
+          </div>
+          <div class="flex-side gap-2xl mt-auto">
+            <common-custom-button :label="$t('top_up')" type="submit"/>
+            <div class="flex-side gap-2xs">
+              <img src="/svg/card/uzcard.svg" alt=""/>
+              <img src="/svg/card/humo.svg" alt=""/>
+              <img src="/svg/card/visa.svg" alt=""/>
+              <img src="/svg/card/mastercard.svg" alt=""/>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="container">
+      <div class="page-home-folk-services">
+        <button
+          class="page-home-folk-services-action heading-4 flex-side gap-2xs"
+          type="button"
+        >
+          {{ $t("fold_services") }}
+          <svg width="11" height="18" viewBox="0 0 11 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 2L9 9L2 16" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="page-home-folk-services-chips no-scroll flex-side gap-md">
+          <common-chips
+            v-for="chips in mapServices"
+            :key="chips.key"
+            :label="$t(chips.label)"
+            :active="servicesValue === chips.key"
+          />
+        </div>
+        <div class="page-home-folk-services-grid">
+          <common-card-content
+            v-for="service in servicesStore.$state.services"
+            :key="service.id"
+            :heading="service.heading"
+            :button-label="service.buttonLabel"
+            :description="service.description"
+            :image-path="service.imagePath"
+            :style="{
+               '--content-card-background': service.colorCode,
+               '--content-padding': '32px'
+            }"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/assets/styles/mixins";
-@import url("node_modules/@egjs/vue3-flicking/dist/flicking.css");
-// Or, if you have to support IE9
-@import url("node_modules/@egjs/vue3-flicking/dist/flicking-inline.css");
 
 .page-home {
   .page-home-intro {
@@ -440,6 +511,7 @@ export default {
 
   .page-home-info {
     padding: 16px 0 39px;
+
     .page-home-info-slider {
       .flicking-camera {
         display: flex;
@@ -522,18 +594,183 @@ export default {
   .page-home-text-slide {
     padding: 48px 0;
 
-    p {
-      color: rgba(var(--clr-black-rgb), 0.3);
-      white-space: nowrap;
+    .page-home-text-slide-wrapper {
+      overflow-x: auto;
+      width: 100vw;
+
+      p {
+        color: rgba(var(--clr-black-rgb), 0.3);
+        white-space: nowrap;
+      }
+
+      .page-home-text-slide-wrapper-dod {
+        min-width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background-color: var(--clr-black);
+      }
+    }
+  }
+
+  .page-home-create-tariff {
+    padding: 32px;
+    background-color: var(--clr-gray-2);
+    position: relative;
+
+    .page-home-create-tariff-heading {
+      color: var(--clr-black);
     }
 
-    .page-home-text-slide-dod {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background-color: var(--clr-black);
+    .page-home-create-tariff-title {
+      max-width: 344px;
+      margin-bottom: 10px;
+      margin-top: 24px;
+      color: var(--clr-black);
+    }
+
+    .page-home-create-tariff-description {
+      font-style: normal;
+      max-width: 344px;
+      margin-bottom: 50px;
+      display: block;
+      color: rgba(var(--clr-black-rgb), 0.5);
+    }
+
+    .page-home-create-tariff-image {
+      position: absolute;
+      bottom: 0;
+      right: 11px;
+    }
+  }
+
+  .page-home-up-balance-online {
+    padding: 32px;
+    background-color: var(--clr-gray-1);
+    position: relative;
+
+    .page-home-up-balance-online-image {
+      position: absolute;
+      right: 38px;
+      bottom: 36px;
+    }
+
+    .page-home-up-balance-online-heading {
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .page-home-up-balance-online-control {
+      width: 100%;
+      max-width: 350px;
+      height: 44px;
+      position: relative;
+
+      .page-home-up-balance-online-control-label {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        bottom: 2px;
+        padding: 9px 16px;
+        background-color: rgba(var(--clr-black-rgb), 0.1);
+        color: rgba(var(--clr-black-rgb), 0.5);
+        z-index: 2;
+
+        &.is-right {
+          left: initial;
+          right: 2px;
+        }
+      }
+
+      .page-home-up-balance-online-control-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 44px;
+        z-index: 1;
+        border: none;
+        outline: none;
+        padding: 11px 11px 11px 78px;
+
+        &.is-right {
+          padding: 11px 68px 11px 11px;
+        }
+
+        &::placeholder {
+          color: rgba(var(--clr-black-rgb), 0.5);
+        }
+      }
+    }
+  }
+
+  .page-home-folk-services {
+    padding: 48px 0;
+
+    .page-home-folk-services-action {
+      @include btnDefault;
+      transition: var(--transition);
+      &:hover {
+        text-decoration: underline dashed;
+      }
+    }
+
+    .page-home-folk-services-chips {
+      overflow: hidden;
+      margin-top: 24px;
+      margin-bottom: 32px;
+    }
+
+    .page-home-folk-services-grid {
+      width: 100%;
+      display: grid;
+      grid-template-areas:
+        'left centerTop centerTop rightTop'
+        'left centerLeft centerRight rightBottom';
+      gap: 20px;
+
+      & > * {
+        &:nth-child(1) {
+          grid-area: left;
+        }
+
+        &:nth-child(2) {
+          grid-area: centerTop;
+        }
+
+        &:nth-child(3) {
+          grid-area: centerLeft;
+        }
+
+        &:nth-child(4) {
+          grid-area: centerRight;
+        }
+
+        &:nth-child(5) {
+          grid-area: rightTop;
+        }
+
+        &:nth-child(6) {
+          grid-area: rightBottom;
+        }
+      }
     }
   }
 }
 </style>
 
+<style lang="scss">
+@import url("node_modules/@egjs/vue3-flicking/dist/flicking.css");
+@import url("node_modules/@egjs/vue3-flicking/dist/flicking-inline.css");
+
+.page-home {
+  .page-home-info {
+    .page-home-info-slider {
+      .flicking-camera {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+      }
+    }
+  }
+}
+</style>

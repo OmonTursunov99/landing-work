@@ -34,5 +34,16 @@
   "beeline_visa": "Beeline Visa",
   "beepul": "Beepul",
   "sim_card_delivery": "Доставка СИМ-карт",
-  "router": "Роутер"
+  "router": "Роутер",
+  "do_not_know_which_tariff_to_choose": "Не знаете какой тариф выбрать?",
+  "we_will_ask_you_only_questions": "Мы зададим вам всего {count} вопроса",
+  "create_tariff_description": "после опроса, мы предложим вам самый подходящий тарифный план.",
+  "choose_a_suitable_tariff": "Подобрать подходящий тариф",
+  "up_balance_online": "Пополните баланс онлайн",
+  "top_up": "Пополнить",
+  "phone_number": "Номер телефона",
+  "summa": "Сумма",
+  "fold_services": "Народные сервисы",
+  "popular_service": "Популярное",
+  "digital": "Digital"
 }

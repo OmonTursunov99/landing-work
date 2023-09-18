@@ -33,20 +33,32 @@ export default {
       type: [ String, undefined ],
       default: undefined,
       required: false,
+    },
+    buttonLabel: {
+      type: String,
+      default: "",
+      required: false,
+    },
+    transparentBackground: {
+      type: Boolean,
+      default: false,
     }
   }
 }
 </script>
 
 <template>
-  <component :is="tag" class="content-card">
+  <component :is="tag" class="content-card" :class="{'transparent-background': transparentBackground}">
     <img v-if="!!imagePath" class="content-card-image" :src="imagePath" alt=""/>
     <p v-if="!!heading" class="content-card-heading heading-5">{{ heading }}</p>
-    <p v-if="!!description" class="content-card-description text-sm">{{ description }}</p>
+    <p v-if="!!description" class="content-card-description text-sm" :class="{'has-padding-bottom': !!buttonLabel}">{{ description }}</p>
     <div v-if="!!loopText" class="content-card-bottom flex-side gap-xs">
       <p class="text-sm">{{ loopText }}</p>
       <div class="content-card-bottom-dod"></div>
       <p class="text-sm">{{ loopText }}</p>
+    </div>
+    <div v-if="!!buttonLabel" class="mt-auto content-card-action">
+      <common-custom-button  :label="buttonLabel" fill="outline" />
     </div>
   </component>
 </template>
@@ -58,13 +70,14 @@ export default {
   --content-card-description-space: 12px;
   --content-card-min-height: 0;
   --content-card-color: var(--clr-black);
+  --content-padding: 12px;
 
   user-select: none;
   width: 100%;
   display: flex;
   flex-direction: column;
   min-height: var(--content-card-min-height);
-  padding: 12px;
+  padding: var(--content-padding);
   gap: var(--content-card-gap);
   background-color: var(--content-card-background);
   color: var(--content-card-color);
@@ -73,15 +86,17 @@ export default {
   overflow: hidden;
   transition: var(--transition);
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
-    z-index: 9;
+  &.transparent-background {
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      z-index: 9;
+    }
   }
 
   .content-card-image {
@@ -102,6 +117,10 @@ export default {
   .content-card-description {
     z-index: 1;
     margin-top: var(--content-card-description-space);
+
+    &.has-padding-bottom {
+      padding-bottom: 21px;
+    }
   }
 
   //&:hover {
@@ -132,55 +151,8 @@ export default {
     }
   }
 
-  //.content-card-bottom {
-  //  display: flex;
-  //  position: absolute;
-  //  bottom: 0;
-  //  left: 0;
-  //  width: 100%;
-  //  height: 26px;
-  //  margin: auto;
-  //  background-color: var(--clr-black);
-  //  overflow: hidden;
-  //  z-index: 1;
-  //
-  //  .content-card-bottom-title {
-  //    display: flex;
-  //    position: absolute;
-  //    top: 0;
-  //    left: 0;
-  //    align-items: center;
-  //    justify-content: flex-start;
-  //    width: 100%;
-  //    height: 100%;
-  //    white-space: nowrap;
-  //    //transform: scale(2);
-  //    //transition: all 1s ease;
-  //
-  //    & > div {
-  //      display: flex;
-  //      //animation: scrollText 3s infinite linear;
-  //    }
-  //
-  //    p {
-  //      margin: 0;
-  //      color: var(--clr-white);
-  //      transition: var(--transition);
-  //    }
-  //  }
-  //}
-  //
-  //div:hover {
-  //  animation-play-state: paused;
-  //}
-  //
-  //@keyframes scrollText {
-  //  from {
-  //    transform: translateX(0%);
-  //  }
-  //  to {
-  //    transform: translateX(50%);
-  //  }
-  //}
+  .content-card-action {
+    z-index: 1;
+  }
 }
 </style>
