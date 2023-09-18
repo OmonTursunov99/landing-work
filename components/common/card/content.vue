@@ -59,6 +59,7 @@ export default {
   --content-card-min-height: 0;
   --content-card-color: var(--clr-black);
 
+  user-select: none;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -71,6 +72,17 @@ export default {
   cursor: pointer;
   overflow: hidden;
   transition: var(--transition);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: 9;
+  }
 
   .content-card-image {
     position: absolute;
@@ -92,13 +104,13 @@ export default {
     margin-top: var(--content-card-description-space);
   }
 
-  &:hover {
-    box-shadow: 0 8px 12px 0 var(--clt-shadow);
-
-    .content-card-image {
-      transform: scale(1.2);
-    }
-  }
+  //&:hover {
+  //  box-shadow: 0 8px 12px 0 var(--clt-shadow);
+  //
+  //  .content-card-image {
+  //    transform: scale(1.2);
+  //  }
+  //}
 
   .content-card-bottom {
     z-index: 1;

@@ -153,12 +153,5 @@ export default {
 
     }
   }
-
-  &:hover {
-    .tariff-card-main {
-      color: v-bind(tariffColorCode);
-    }
-  }
-
 }
 </style>

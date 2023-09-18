@@ -23,6 +23,7 @@ const inputConfig: InputConfig = {
   css: [
     '@/assets/styles/global.scss',
     '@/assets/styles/fonts.scss',
+    '@/assets/styles/fonts.scss',
   ],
   modules: [
     "@pinia/nuxt",

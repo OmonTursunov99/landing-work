@@ -9,7 +9,11 @@ import svgArrowLeft from "@/public/svg/arrow-left.svg?component";
 import svgArrowRight from "@/public/svg/arrow-right.svg?component"
 import { useInternetPackagesStore } from "~/store/intenet-packages";
 import { useTariffsStore } from "~/store/tariffs";
-import gsap from 'gsap'
+import gsap from 'gsap';
+import Flicking from "@egjs/vue3-flicking";
+import { AutoPlay } from "@egjs/flicking-plugins";
+
+const plugins = [ new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: true }) ];
 
 export default {
   name: "page-home",
@@ -18,6 +22,7 @@ export default {
     SwiperSlide,
     svgArrowLeft,
     svgArrowRight,
+    Flicking: Flicking,
   },
   data() {
     return {
@@ -54,6 +59,116 @@ export default {
       catalogValue: 'tariff', // internet_packages | tariff
       internetPackageValue: 'internet_packages',
       tariffValue: 'popular',
+      mapTextSlides: [
+        this.$t("beeline_tv"),
+        this.$t("beeline_visa"),
+        this.$t("beepul"),
+        this.$t("sim_card_delivery"),
+        this.$t("router"),
+        this.$t("beeline_tv"),
+        this.$t("beeline_visa"),
+      ],
+      mapContent: [
+        {
+          heading: "Зона покрытия и офисы",
+          description: "Ознакомьтесь с адресами офисов и картой покрытия",
+          imagePath: "/images/office-zone.png",
+          style: {
+            '--content-card-description-space': 'auto',
+            '--content-card-min-height': '273px',
+            '--content-card-color': 'var(--clr-white)',
+          }
+        },
+        {
+          loopText: "Пополнить баланс",
+          imagePath: "/images/replenish-balance.png",
+          style: {
+            '--content-card-min-height': '227px',
+          }
+        },
+        {
+          heading: "Подобрать номер",
+          description: "Предлагаем вам быстро и удобно подобрать красивый номер.",
+          style: {
+            '--content-card-background': `rgba(var(--clr-primary-rgb), 0.2)`,
+            '--content-card-description-space': '36px',
+          }
+        },
+        {
+          heading: "Конструк-тор тарифов",
+          description: "Теперь ты решаешь, каким будет твой тариф!",
+          style: {
+            '--content-card-background': `rgba(var(--clr-pik-rgb), 0.2)`,
+            '--content-card-description-space': '80px',
+          }
+        },
+        {
+          loopText: "Замена сим карты",
+          imagePath: "/images/replacing-sim-card.png",
+          style: {
+            '--content-card-min-height': '247px',
+            '--content-card-background': `rgba(var(--clr-green-rgb), 0.2)`,
+          }
+        },
+        {
+          heading: "eSIM",
+          description: "Подключите услугу «eSIM» бесплатно!",
+          style: {
+            '--content-card-background': `rgba(var(--clr-blue-rgb), 0.2)`,
+            '--content-card-description-space': '58px',
+          }
+        },
+        {
+          heading: "Зона покрытия и офисы",
+          description: "Ознакомьтесь с адресами офисов и картой покрытия",
+          imagePath: "/images/office-zone.png",
+          style: {
+            '--content-card-description-space': 'auto',
+            '--content-card-min-height': '273px',
+            '--content-card-color': 'var(--clr-white)',
+          }
+        },
+        {
+          loopText: "Пополнить баланс",
+          imagePath: "/images/replenish-balance.png",
+          style: {
+            '--content-card-min-height': '227px',
+          }
+        },
+        {
+          heading: "Подобрать номер",
+          description: "Предлагаем вам быстро и удобно подобрать красивый номер.",
+          style: {
+            '--content-card-background': `rgba(var(--clr-primary-rgb), 0.2)`,
+            '--content-card-description-space': '36px',
+          }
+        },
+        {
+          heading: "Конструк-тор тарифов",
+          description: "Теперь ты решаешь, каким будет твой тариф!",
+          style: {
+            '--content-card-background': `rgba(var(--clr-pik-rgb), 0.2)`,
+            '--content-card-description-space': '80px',
+          }
+        },
+        {
+          loopText: "Замена сим карты",
+          imagePath: "/images/replacing-sim-card.png",
+          style: {
+            '--content-card-min-height': '247px',
+            '--content-card-background': `rgba(var(--clr-green-rgb), 0.2)`,
+          }
+        },
+        {
+          heading: "eSIM",
+          description: "Подключите услугу «eSIM» бесплатно!",
+          style: {
+            '--content-card-background': `rgba(var(--clr-blue-rgb), 0.2)`,
+            '--content-card-description-space': '58px',
+          }
+        },
+      ],
+      plugins,
     };
   },
   methods: {
@@ -90,7 +205,7 @@ export default {
   },
   computed: {
     catalogButtonLabel() {
-      return `${this.$t("all")} ${this.$t(this.catalogValue).toString().toLowerCase()}`;
+      return `${ this.$t("all") } ${ this.$t(this.catalogValue).toString().toLowerCase() }`;
     }
   }
 }
@@ -114,69 +229,17 @@ export default {
       </swiper>
     </div>
     <div class="page-home-info">
-      <swiper v-bind="swiperInfoOptions">
-        <swiper-slide>
+      <Flicking class="page-home-info-slider" :options="{ circular: true, renderOnlyVisible: true }" :plugins="plugins">
+        <div
+          v-for="(content, index) in mapContent"
+          :key="index"
+          style="width: 200px"
+        >
           <common-card-content
-            heading="Зона покрытия и офисы"
-            description="Ознакомьтесь с адресами офисов и картой покрытия"
-            image-path="/images/office-zone.png"
-            :style="{
-              '--content-card-description-space': 'auto',
-              '--content-card-min-height': '273px',
-              '--content-card-color': 'var(--clr-white)',
-            }"
+            v-bind="content"
           />
-        </swiper-slide>
-        <swiper-slide>
-          <common-card-content
-            loop-text="Пополнить баланс"
-            image-path="/images/replenish-balance.png"
-            :style="{
-              '--content-card-min-height': '227px',
-            }"
-          />
-        </swiper-slide>
-        <swiper-slide>
-          <common-card-content
-            heading="Подобрать номер"
-            description="Предлагаем вам быстро и удобно подобрать красивый номер."
-            :style="{
-              '--content-card-background': `rgba(var(--clr-primary-rgb), 0.2)`,
-              '--content-card-description-space': '36px',
-            }"
-          />
-        </swiper-slide>
-        <swiper-slide>
-          <common-card-content
-            heading="Конструк-тор тарифов"
-            description="Теперь ты решаешь, каким будет твой тариф!"
-            :style="{
-              '--content-card-background': `rgba(var(--clr-pik-rgb), 0.2)`,
-              '--content-card-description-space': '80px',
-            }"
-          />
-        </swiper-slide>
-        <swiper-slide>
-          <common-card-content
-            loop-text="Замена сим карты"
-            image-path="/images/replacing-sim-card.png"
-            :style="{
-              '--content-card-min-height': '247px',
-              '--content-card-background': `rgba(var(--clr-green-rgb), 0.2)`,
-            }"
-          />
-        </swiper-slide>
-        <swiper-slide>
-          <common-card-content
-            heading="eSIM"
-            description="Подключите услугу «eSIM» бесплатно!"
-            :style="{
-              '--content-card-background': `rgba(var(--clr-blue-rgb), 0.2)`,
-              '--content-card-description-space': '58px',
-            }"
-          />
-        </swiper-slide>
-      </swiper>
+        </div>
+      </Flicking>
     </div>
     <div class="page-home-catalog">
       <div class="page-home-catalog-head">
@@ -231,7 +294,8 @@ export default {
               <common-card-tariff v-for="item in tariffsStore.$state.populars" :key="item.id" :data="item"/>
             </div>
             <div v-if="catalogValue === 'internet_packages'" class="page-home-catalog-items-grid">
-              <common-card-package v-for="item in internetPackagesStore.$state.internetPackages" :key="item.id" :data="item"/>
+              <common-card-package v-for="item in internetPackagesStore.$state.internetPackages" :key="item.id"
+                :data="item"/>
             </div>
           </TransitionGroup>
           <div class="flex-side justify-between w-full">
@@ -253,11 +317,28 @@ export default {
         </div>
       </div>
     </div>
+    <div class="page-home-text-slide flex-side column gap-md">
+      <div class="page-home-text-slide-wrapper flex-side gap-2xl">
+        <template v-for="text in mapTextSlides" :key="text">
+          <p class="heading-1">{{ text }}</p>
+          <div class="page-home-text-slide-dod"/>
+        </template>
+      </div>
+      <div class="page-home-text-slide-wrapper flex-side gap-2xl">
+        <template v-for="text in mapTextSlides" :key="text">
+          <p class="heading-1">{{ text }}</p>
+          <div class="page-home-text-slide-dod"/>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
 @import "@/assets/styles/mixins";
+@import url("node_modules/@egjs/vue3-flicking/dist/flicking.css");
+// Or, if you have to support IE9
+@import url("node_modules/@egjs/vue3-flicking/dist/flicking-inline.css");
 
 .page-home {
   .page-home-intro {
@@ -358,7 +439,14 @@ export default {
   }
 
   .page-home-info {
-    padding: 16px 16px 39px;
+    padding: 16px 0 39px;
+    .page-home-info-slider {
+      .flicking-camera {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+      }
+    }
   }
 
   .page-home-catalog {
@@ -428,6 +516,22 @@ export default {
           }
         }
       }
+    }
+  }
+
+  .page-home-text-slide {
+    padding: 48px 0;
+
+    p {
+      color: rgba(var(--clr-black-rgb), 0.3);
+      white-space: nowrap;
+    }
+
+    .page-home-text-slide-dod {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background-color: var(--clr-black);
     }
   }
 }
