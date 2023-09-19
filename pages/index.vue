@@ -1,26 +1,18 @@
 <script>
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Navigation, Autoplay, Pagination, FreeMode } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/free-mode';
 import svgArrowLeft from "@/public/svg/arrow-left.svg?component";
 import svgArrowRight from "@/public/svg/arrow-right.svg?component"
 import { useInternetPackagesStore } from "~/store/intenet-packages";
 import { useTariffsStore } from "~/store/tariffs";
 import Flicking from "@egjs/vue3-flicking";
-import { AutoPlay } from "@egjs/flicking-plugins";
-import { vMaska } from "maska";
+import { AutoPlay, Pagination } from "@egjs/flicking-plugins";
+import "@egjs/flicking-plugins/dist/pagination.css";
 import { useServicesStore } from "@/store/services";
-
-const pluginsSlideContent = [ new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: true }) ];
+import PopularServicesSection from "~/components/popular-services.vue";
 
 export default {
   name: "page-home",
   components: {
-    Swiper,
-    SwiperSlide,
+    PopularServicesSection,
     svgArrowLeft,
     svgArrowRight,
     Flicking: Flicking,
@@ -30,20 +22,20 @@ export default {
       internetPackagesStore: useInternetPackagesStore(),
       tariffsStore: useTariffsStore(),
       servicesStore: useServicesStore(),
-      swiperInfoOptions: {
-        autoplay: { delay: 1000, disableOnInteraction: false, pauseOnMouseEnter: true },
-        slidesPerView: 7,
-        spaceBetween: 16,
-        loop: true,
-        freeMode: true,
-        modules: [ FreeMode, Autoplay ],
-      },
-      swiperIntroOptions: {
-        class: [ 'page-home-intro-swiper' ],
-        loop: true,
-        modules: [ Navigation, Autoplay ],
-        autoplay: { delay: 10000, disableOnInteraction: false },
-        pagination: { clickable: true },
+
+      pluginsSliderIntro: [
+        new AutoPlay({
+          duration: 10000,
+          direction: "NEXT",
+          stopOnHover: true
+        }) ,
+        new Pagination({
+          type: 'bullet'
+        }),
+      ],
+      optionsSlideIntro: {
+        circular: true,
+        renderOnlyVisible: true
       },
       mapInternetPackage: [
         { key: 'internet_packages', label: this.$t("internet_packages") },
@@ -60,6 +52,7 @@ export default {
       catalogValue: 'tariff', // internet_packages | tariff
       internetPackageValue: 'internet_packages',
       tariffValue: 'popular',
+
       mapTextSlides: [
         this.$t("beeline_tv"),
         this.$t("beeline_visa"),
@@ -169,11 +162,14 @@ export default {
           }
         },
       ],
-      pluginsSlideContent,
+      pluginsSlideContent: [
+        new AutoPlay({ duration: 2000, direction: "NEXT", stopOnHover: true }),
+      ],
       optionsSlideContent: {
         circular: true,
         renderOnlyVisible: true
       },
+
       mapServices: [
         { key: "popular_service", label: this.$t("popular_service") },
         { key: "digital", label: this.$t("digital") },
@@ -188,7 +184,12 @@ export default {
         { key: "popular_service", label: this.$t("popular_service") },
         { key: "digital", label: this.$t("digital") },
       ],
-      servicesValue: 'popular_service'
+      servicesValue: 'popular_service',
+      mapNewCustomers: [
+        this.$t("more_than_tariffs_for_all_occasions", { count: 20 }),
+        this.$t("a_huge_number_of_Internet_packages"),
+        this.$t("connect_our_services_and_spend_your_leisure_time_with_us"),
+      ],
     };
   },
   methods: {
@@ -214,18 +215,25 @@ export default {
   <div class="page-home">
     <div class="page-home-intro">
       <button class="page-home-intro-action is-prev" type="button">
-        <svg-arrow-left/>
+        <svg width="39" height="34" viewBox="0 0 39 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17 1L1 17L17 33" stroke="#DAE0E2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 17H38" stroke="#DAE0E2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </button>
       <button class="page-home-intro-action is-next" type="button">
-        <svg-arrow-left/>
+        <svg width="39" height="34" viewBox="0 0 39 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 1L38 17L22 33" stroke="#DAE0E2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M37 17H1" stroke="#DAE0E2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </button>
-      <swiper v-bind="swiperIntroOptions">
-        <swiper-slide v-for="count in 3" :key="count">
-          <div class="page-home-intro-swiper-content">
-            <video class="page-home-intro-swiper-video" :src="`/public/videos/slide-${count}.mp4`" autoplay loop/>
-          </div>
-        </swiper-slide>
-      </swiper>
+      <Flicking  class="page-home-intro-slider" :options="optionsSlideIntro" :plugins="pluginsSliderIntro">
+        <div class="page-home-intro-slider-slide" v-for="count in 3" :key="count">
+          <video class="page-home-intro-slider-slide-video" :src="`/public/videos/slide-${count}.mp4`" autoplay loop/>
+        </div>
+        <template #viewport>
+          <div class="flicking-pagination"></div>
+        </template>
+      </flicking>
     </div>
     <div class="page-home-info">
       <flicking class="page-home-info-slider" :options="optionsSlideContent" :plugins="pluginsSlideContent">
@@ -234,6 +242,7 @@ export default {
         </div>
       </flicking>
     </div>
+    <popular-services-section />
     <div class="page-home-catalog">
       <div class="page-home-catalog-head">
         <div class="container">
@@ -342,10 +351,8 @@ export default {
             <label class="page-home-up-balance-online-control-label text-base">+998</label>
             <input
               class="page-home-up-balance-online-control-input text-base"
-              type="text"
+              type="tel"
               :placeholder="$t('phone_number')"
-              v-maska
-              data-maska="#-#"
               required
             />
           </div>
@@ -404,6 +411,31 @@ export default {
           />
         </div>
       </div>
+      <div class="page-home-new-customer">
+        <strong class="page-home-new-customer-heading heading-5">{{ $t("become_new_customer") }}</strong>
+        <ul class="page-home-new-customer-unordered flex-side column gap-2xs">
+          <li v-for="(text, index) in mapNewCustomers" :key="index" class="page-home-new-customer-unordered-list text-sm flex-side gap-2xs">
+            <img src="/svg/vecktor-check.svg" alt=""/>
+            {{ text }}
+          </li>
+        </ul>
+        <form class="page-home-new-customer-form">
+          <strong class="page-home-new-customer-form-heading heading-6">{{ $t('choose_your_beautiful_room') }}</strong>
+          <div class="page-home-new-customer-form-additional-actions flex-side gap-2xs">
+            <common-custom-button :label="$t('by_mask')" fill="primary" size="small"/>
+            <common-custom-button :label="$t('arbitrarily')" fill="outline" size="small"/>
+          </div>
+          <div class="page-home-new-customer-form-actions flex-side gap-xs">
+            <div class="page-home-new-customer-form-actions-control">
+              <label class="page-home-new-customer-form-actions-control-label text-base" for="phone-number">+998</label>
+              <input id="phone-number" class="page-home-new-customer-form-actions-control-input text-base" type="text"
+                placeholder="ххх - хх - хх"/>
+            </div>
+            <common-custom-button :label="$t('select')" fill="secondary" style="--custom-button-height: 42px"/>
+          </div>
+        </form>
+        <img class="page-home-new-customer-image" src="/images/new-customer.png" alt=""/>
+      </div>
     </div>
   </div>
 </template>
@@ -416,6 +448,15 @@ export default {
     height: auto;
     position: relative;
 
+    .page-home-intro-slider {
+      .page-home-intro-slider-slide {
+        width: 100%;
+        .page-home-intro-slider-slide-video {
+          width: 100%;
+        }
+      }
+    }
+
     .page-home-intro-action {
       @include btnDefault;
 
@@ -425,6 +466,7 @@ export default {
       background-color: var(--clr-black);
       padding: 18px 16px;
       z-index: 9;
+      transition: var(--transition);
 
       &.is-prev {
         left: 46px;
@@ -432,16 +474,17 @@ export default {
 
       &.is-next {
         right: 46px;
-
-        svg {
-          transform: rotate(180deg);
-        }
       }
 
       svg {
         path {
+          transition: var(--transition);
           stroke: var(--clr-arrow-icon);
         }
+      }
+
+      &:hover {
+        background-color: rgba(var(--clr-black-rgb), 0.8);
       }
     }
 
@@ -496,14 +539,6 @@ export default {
             transition: var(--transition);
           }
 
-          @keyframes bulletActive {
-            0% {
-              width: 0;
-            }
-            100% {
-              width: 100%;
-            }
-          }
         }
       }
     }
@@ -688,9 +723,10 @@ export default {
         width: 100%;
         height: 44px;
         z-index: 1;
-        border: none;
+        border: 1px solid transparent;
         outline: none;
         padding: 11px 11px 11px 78px;
+        transition: var(--transition);
 
         &.is-right {
           padding: 11px 68px 11px 11px;
@@ -698,6 +734,14 @@ export default {
 
         &::placeholder {
           color: rgba(var(--clr-black-rgb), 0.5);
+        }
+
+        &:hover {
+          border-color: rgba(var(--clr-black-rgb), 0.1);
+        }
+
+        &:focus {
+          border-color: rgba(var(--clr-black-rgb), 0.5);
         }
       }
     }
@@ -709,6 +753,7 @@ export default {
     .page-home-folk-services-action {
       @include btnDefault;
       transition: var(--transition);
+
       &:hover {
         text-decoration: underline dashed;
       }
@@ -755,6 +800,94 @@ export default {
       }
     }
   }
+
+  .page-home-new-customer {
+    padding: 32px 46px;
+    border-top: 2px solid var(--clr-black);
+    background-color: var(--clr-gray-2);
+    position: relative;
+    margin-bottom: 48px;
+
+    .page-home-new-customer-heading {
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .page-home-new-customer-unordered {
+      margin-bottom: 28px;
+      .page-home-new-customer-unordered-list {
+
+      }
+    }
+
+    .page-home-new-customer-form {
+      padding: 19px 25px 23px;
+      background-color: var(--clr-white);
+      max-width: 463px;
+      .page-home-new-customer-form-heading {
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      .page-home-new-customer-form-additional-actions {
+        margin-bottom: 14px;
+      }
+
+      .page-home-new-customer-form-actions {
+        .page-home-new-customer-form-actions-control {
+          width: 100%;
+          max-width: 350px;
+          height: 44px;
+          position: relative;
+
+          .page-home-new-customer-form-actions-control-label {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            bottom: 2px;
+            padding: 9px 16px;
+            background-color: rgba(var(--clr-black-rgb), 0.1);
+            color: rgba(var(--clr-black-rgb), 0.5);
+            z-index: 2;
+          }
+
+          .page-home-new-customer-form-actions-control-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 44px;
+            z-index: 1;
+            border: 1px solid rgba(var(--clr-black-rgb), 0.3);
+            outline: none;
+            padding: 11px 11px 11px 78px;
+            transition: var(--transition);
+
+            &::placeholder {
+              color: rgba(var(--clr-black-rgb), 0.5);
+            }
+
+            &:hover {
+              border-color: rgba(var(--clr-black-rgb), 0.1);
+            }
+
+            &:focus {
+              border-color: rgba(var(--clr-black-rgb), 0.5);
+            }
+          }
+        }
+      }
+    }
+
+    .page-home-new-customer-image {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      object-fit: cover;
+      height: 100%;
+    }
+  }
 }
 </style>
 
@@ -762,7 +895,56 @@ export default {
 @import url("node_modules/@egjs/vue3-flicking/dist/flicking.css");
 @import url("node_modules/@egjs/vue3-flicking/dist/flicking-inline.css");
 
+@keyframes bulletActive {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
 .page-home {
+  .page-home-intro {
+    .page-home-intro-slider {
+      .flicking-camera {
+
+      }
+      .flicking-pagination {
+        &.flicking-pagination-bullets {
+          padding: 17px 0;
+          .flicking-pagination-bullet {
+            width: 81px;
+            height: 4px;
+            border-radius: 0;
+            background-color: var(--clr-black);
+            overflow: hidden;
+
+
+            &.flicking-pagination-bullet-active {
+              position: relative;
+              &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0;
+                height: 4px;
+                background-color: var(--clr-primary);
+                animation: bulletActive linear 11s infinite;
+              }
+            }
+          }
+        }
+      }
+      .page-home-intro-slider-slide {
+        .page-home-intro-slider-slide-video {
+
+        }
+      }
+    }
+  }
+
   .page-home-info {
     .page-home-info-slider {
       .flicking-camera {

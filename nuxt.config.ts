@@ -28,13 +28,34 @@ const inputConfig: InputConfig = {
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/i18n",
-    '@nuxtjs/device'
+    '@nuxtjs/device',
+    'nuxt-viewport',
   ],
   pinia: {
     autoImports: [
       'defineStore',
       [ 'defineStore', 'definePiniaStore' ]
     ]
+  },
+  viewport: {
+    breakpoints: {
+      small_desktop: 1200,
+      desktop: 1440,
+
+      small_mobile: 280,
+      medium_mobile: 375,
+      big_mobile: 480,
+
+      tablet: 701,
+      big_tablet: 940,
+    },
+    cookieName: 'viewport',
+    defaultBreakpoints: {
+      desktop: 'desktop',
+      mobile: 'mobile',
+      tablet: 'tablet',
+    },
+    fallbackBreakpoint: 'desktop',
   },
   i18n: {
     lazy: true,

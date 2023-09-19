@@ -123,14 +123,6 @@ export default {
     }
   }
 
-  //&:hover {
-  //  box-shadow: 0 8px 12px 0 var(--clt-shadow);
-  //
-  //  .content-card-image {
-  //    transform: scale(1.2);
-  //  }
-  //}
-
   .content-card-bottom {
     z-index: 1;
     position: absolute;

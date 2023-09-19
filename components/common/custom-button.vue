@@ -125,19 +125,19 @@ export default {
   &.custom-button-size-large {
     font-size: 16px;
     line-height: 22px;
-    height: 56px;
+    height: var(--custom-button-height, 56px);
   }
 
   &.custom-button-size-medium {
     font-size: 14px;
     line-height: 18px;
-    height: 48px;
+    height: var(--custom-button-height, 48px);
   }
 
   &.custom-button-size-small {
     font-size: 14px;
     line-height: 18px;
-    height: 34px;
+    height: var(--custom-button-height, 34px);
   }
 
   &.custom-button-icon {

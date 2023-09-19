@@ -6,7 +6,8 @@ export default {
 
 <template>
   <main>
-    <layout-default-header />
-    <slot />
+    <layout-default-header/>
+    <slot/>
+    <layout-default-footer/>
   </main>
 </template>
